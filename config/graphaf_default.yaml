@@ -1,0 +1,64 @@
+# Default configuration for GraphAF model training
+
+name: "graphaf_default"
+description: "Default GraphAF autoregressive flow training configuration"
+output_dir: "experiments/graphaf"
+version: "1.0"
+tags: ["autoregressive_flow", "molecular_generation"]
+
+model:
+  type: "autoregressive_flow"
+  hidden_dim: 256
+  num_layers: 4
+  dropout: 0.1
+  max_nodes: 50
+  
+  # Flow-specific parameters
+  num_flow_layers: 4
+  num_node_types: 10
+
+training:
+  batch_size: 32
+  num_epochs: 100
+  gradient_clip: 1.0
+  patience: 15
+  seed: 42
+  num_workers: 0
+  save_every: 10
+  validate_every: 1
+  
+  # Loss configuration (for autoregressive flows)
+  regularization_weight: 0.01
+  entropy_regularization: 0.001
+  gradient_penalty_weight: 0.0
+  
+  optimizer:
+    type: "adam"
+    learning_rate: 1e-4
+    weight_decay: 1e-5
+    betas: [0.9, 0.999]
+    eps: 1e-8
+    
+  scheduler:
+    type: "cosine"
+    T_max: 100
+    eta_min: 1e-6
+
+data:
+  dataset_type: "zinc15"
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  filter_invalid: true
+  cache_processed: true
+  
+logging:
+  level: "INFO"
+  log_to_file: true
+  log_to_console: true
+  use_wandb: false
+  wandb_project: "molecugen"
+  use_tensorboard: false
+  log_every: 10
+  save_plots: true
+  plot_format: "png"

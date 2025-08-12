@@ -1,0 +1,64 @@
+# Default configuration for molecular generation
+
+name: "generation_default"
+description: "Default molecular generation configuration"
+version: "1.0"
+
+# Generation parameters
+generation:
+  num_molecules: 1000
+  batch_size: 32
+  max_nodes: 50
+  temperature: 1.0
+  max_attempts: 10
+  
+  # Sampling parameters
+  sampling:
+    method: "standard"  # "standard", "iterative", "property_guided"
+    temperature_schedule: [2.0, 1.5, 1.0, 0.8, 0.5]  # For iterative generation
+    max_iterations: 10
+
+# Constraint filtering
+constraints:
+  apply_constraints: true
+  
+  # Lipinski Rule of Five
+  lipinski:
+    enabled: true
+    molecular_weight_max: 500.0
+    logp_max: 5.0
+    hbd_max: 5
+    hba_max: 10
+  
+  # QED drug-likeness
+  qed:
+    enabled: true
+    threshold: 0.5
+  
+  # Custom property ranges
+  property_ranges:
+    molecular_weight: [150.0, 500.0]
+    logp: [-2.0, 5.0]
+    tpsa: [0.0, 140.0]
+    num_atoms: [5, 50]
+
+# Property-based generation
+property_targeting:
+  enabled: false
+  target_properties:
+    qed: 0.7
+    molecular_weight: 350.0
+    logp: 2.5
+  tolerance: 0.1
+
+# Output options
+output:
+  format: "smi"  # "smi", "csv", "json"
+  save_all: false  # Save all generated molecules including filtered
+  save_stats: true  # Save generation statistics
+  
+# Validation
+validation:
+  filter_invalid: true
+  remove_duplicates: true
+  canonicalize_smiles: true
